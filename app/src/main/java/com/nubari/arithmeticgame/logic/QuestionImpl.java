@@ -23,6 +23,7 @@ public class QuestionImpl extends Question {
         for (int operand : operands) {
             result += operand;
         }
+        System.out.println("Actual answer is " + result);
         answer = result;
     }
 }

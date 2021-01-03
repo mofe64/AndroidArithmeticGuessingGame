@@ -40,6 +40,7 @@ public class QuestioniareActivity extends AppCompatActivity {
     public void onClickGetAnswer(View view) {
         final EditText userAnswer = (EditText) findViewById(R.id.answer);
         userCurrentAnswer = userAnswer.getText().toString();
+        userAnswer.setText("");
         userHasAnswered = true;
     }
 
@@ -52,30 +53,29 @@ public class QuestioniareActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                int timeAdd = 0;
                 if (gameInProgress) {
+                    if(userHasAnswered){
+
+                        questionView.setText(currentQuestion.generateQuestion());
+                    }
                     String questionString = currentQuestion.generateQuestion();
                     String userScore = "Score : " + currentQuestion.getScore();
+                    System.out.println("Score is " + currentQuestion.getScore());
                     scoreView.setText(userScore);
-                    System.out.println("Level limit is " + currentQuestion.getLevelLimit());
-
                     questionView.setText(questionString);
-                    System.out.println("Current q no is " + currentQuestionNo);
                     currentQuestionNo++;
                     int limit = currentQuestion.getLevelLimit();
                     if (currentQuestionNo > limit) {
                         gameInProgress = false;
                     }
-
+                    System.out.println(userHasAnswered);
                 }
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 7000 );
             }
         });
     }
 
-    private boolean check(int a, int b) {
-        // System.out.println("Got here ");
-        return a > b;
-    }
 
     private Question determineLevel() {
         Question question = null;
