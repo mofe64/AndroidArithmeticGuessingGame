@@ -1,39 +1,62 @@
 <?xml version="1.0" encoding ="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".QuestioniareActivity">
+
     <TextView
-        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textStyle="normal"
+        android:text="@string/questionPageHint"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textStyle="bold">
+
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:id="@+id/score">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:textSize="25sp"
-        android:text="@string/welcomeText">
+        android:textStyle="normal"
+        android:id="@+id/questionBox">
+
     </TextView>
+
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:hint="@string/hint"
+        android:hint="@string/hintQuestion"
         android:layout_marginTop="20dp"
         android:ems="10">
     </EditText>
 
     <Button
-        android:id="@+id/submit_button"
+        android:id="@+id/submit_answer_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:onClick="onClickSubmit"
+        android:onClick="onClickGetAnswer"
         android:text="@string/submit">
+
     </Button>
 </LinearLayout>
