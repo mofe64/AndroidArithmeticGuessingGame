@@ -5,7 +5,7 @@ public class LevelTwoQuestionDecorator extends QuestionDecorator {
 
     public LevelTwoQuestionDecorator(Question question) {
         this.question = question;
-        this.levelLimit = 4;
+        this.levelLimit = 7;
         this.levelNumber = 2;
     }
 
