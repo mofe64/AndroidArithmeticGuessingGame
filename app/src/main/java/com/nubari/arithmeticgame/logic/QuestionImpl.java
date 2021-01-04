@@ -3,7 +3,7 @@ package com.nubari.arithmeticgame.logic;
 public class QuestionImpl extends Question {
     public QuestionImpl() {
         levelNumber = 1;
-        levelLimit = 5;
+        levelLimit = 3;
     }
 
     @Override

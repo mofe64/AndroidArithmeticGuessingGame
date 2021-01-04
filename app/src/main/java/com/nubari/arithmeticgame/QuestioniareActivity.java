@@ -14,13 +14,19 @@ import com.nubari.arithmeticgame.logic.Question;
 import com.nubari.arithmeticgame.logic.QuestionImpl;
 
 public class QuestioniareActivity extends AppCompatActivity {
-    Question question;
+    Question currentQuestion;
     String username;
     int userLevel = 1;
     boolean gameInProgress = false;
-    String userCurrentAnswer;
-    boolean userHasAnswered = false;
-    int currentQuestionNo = 1;
+    int answerSubmittedByUser = -1;
+    int userScore = 0;
+    int currentQuestionNo;
+    int numberOfLevelsInGame = 2;
+    TextView questionView;
+    EditText userAnswerView;
+    TextView scoreView;
+    TextView levelView;
+    boolean gameWon = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,78 +34,107 @@ public class QuestioniareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_questioniare);
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
-        question = determineLevel();
-        if (question != null) {
-            startGame(question);
-        } else {
-            gameOver();
+        questionView = (TextView) findViewById(R.id.questionBox);
+        userAnswerView = (EditText) findViewById(R.id.answer);
+        scoreView = (TextView) findViewById(R.id.scoree);
+        levelView = (TextView) findViewById(R.id.level);
+        startGame();
+    }
+
+    public void startGame() {
+        String levelText = "Level :" + userLevel;
+        levelView.setText(levelText);
+        Question questionObj = determineLevel(userLevel);
+        currentQuestion = questionObj;
+        currentQuestionNo = 1;
+        if (questionObj != null) {
+            generateQuestion(questionObj);
         }
+        scoreView.setText(String.valueOf(userScore));
 
     }
 
     public void onClickGetAnswer(View view) {
-        final EditText userAnswer = (EditText) findViewById(R.id.answer);
-        userCurrentAnswer = userAnswer.getText().toString();
-        userAnswer.setText("");
-        userHasAnswered = true;
-    }
-
-    private void startGame(Question currentQuestion) {
-        final String test = "";
-        final TextView questionView = (TextView) findViewById(R.id.questionBox);
-        final TextView scoreView = (TextView) findViewById(R.id.score);
-        //      final EditText userAnswer = (EditText) findViewById(R.id.answer);
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                int timeAdd = 0;
-                if (gameInProgress) {
-                    if(userHasAnswered){
-
-                        questionView.setText(currentQuestion.generateQuestion());
-                    }
-                    String questionString = currentQuestion.generateQuestion();
-                    String userScore = "Score : " + currentQuestion.getScore();
-                    System.out.println("Score is " + currentQuestion.getScore());
-                    scoreView.setText(userScore);
-                    questionView.setText(questionString);
-                    currentQuestionNo++;
-                    int limit = currentQuestion.getLevelLimit();
-                    if (currentQuestionNo > limit) {
-                        gameInProgress = false;
-                    }
-                    System.out.println(userHasAnswered);
+        scoreView.setText(String.valueOf(userScore));
+        String givenAnswer = userAnswerView.getText().toString();
+        userAnswerView.setText("");
+        if (!givenAnswer.equals("")) {
+            answerSubmittedByUser = Integer.parseInt(givenAnswer);
+        }
+        if (isUserAnswerCorrect(answerSubmittedByUser, currentQuestion)) {
+            updateScore();
+            scoreView.setText(String.valueOf(userScore));
+        }
+        if (currentQuestionNo <= currentQuestion.getLevelLimit()) {
+            generateQuestion(currentQuestion);
+        } else {
+            userLevel++;
+            if (userCanProceedToNextLevel()) {
+                startGame();
+            } else {
+                if (gameWon) {
+                    gameOverAndUserWon();
+                    System.out.println("Game won");
+                } else {
+                    gameOverAndUserLost();
                 }
-                handler.postDelayed(this, 7000 );
             }
-        });
+        }
+
     }
 
+    public void generateQuestion(Question question) {
+        questionView.setText(question.generateQuestion());
+        currentQuestionNo++;
+    }
 
-    private Question determineLevel() {
-        Question question = null;
+    public Question determineLevel(int userLevel) {
+        Question question;
         switch (userLevel) {
             case 1: {
-                gameInProgress = true;
                 question = new QuestionImpl();
                 break;
             }
             case 2: {
-                gameInProgress = true;
                 question = new LevelTwoQuestionDecorator(new QuestionImpl());
                 break;
             }
             default: {
-                gameInProgress = false;
-                break;
+                question = null;
             }
         }
         return question;
     }
 
-    private void gameOver() {
-        final TextView questionView = (TextView) findViewById(R.id.questionBox);
-        questionView.setText("GAME OVER");
+    public boolean isUserAnswerCorrect(int userAnswer, Question question) {
+        Number correctAnswer = question.getAnswer();
+        return correctAnswer.intValue() == userAnswer;
     }
+
+    public void updateScore() {
+        userScore++;
+    }
+
+    public boolean userCanProceedToNextLevel() {
+        if (userLevel <= numberOfLevelsInGame) {
+            boolean userCanProceed = userScore > (currentQuestion.getLevelLimit() / 2);
+            userScore = 0;
+            return userCanProceed;
+        } else {
+            gameWon = true;
+            return false;
+        }
+    }
+
+    public void gameOverAndUserWon() {
+        String winningMessage = "Congrats " + username + " You won !!!!!";
+        questionView.setText(winningMessage);
+    }
+
+    public void gameOverAndUserLost() {
+        String losingMessage = "Sorry " + username + " You lost";
+        questionView.setText(losingMessage);
+    }
+
+
 }

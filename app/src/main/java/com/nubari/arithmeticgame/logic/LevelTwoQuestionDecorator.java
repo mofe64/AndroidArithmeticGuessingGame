@@ -5,7 +5,7 @@ public class LevelTwoQuestionDecorator extends QuestionDecorator {
 
     public LevelTwoQuestionDecorator(Question question) {
         this.question = question;
-        this.levelLimit = 7;
+        this.levelLimit = 4;
         this.levelNumber = 2;
     }
 
@@ -29,6 +29,7 @@ public class LevelTwoQuestionDecorator extends QuestionDecorator {
         for (int operand : operands) {
             result += operand;
         }
+        System.out.println("Level Two : Actual answer is  " + result);
         answer = result;
     }
 }
